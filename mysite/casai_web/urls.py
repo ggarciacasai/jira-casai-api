@@ -1,7 +1,6 @@
 from django.urls import path
-
-from .views.index import Index
+from .views.casaiWebSprintReport import CasaiWebSprintReport
 
 urlpatterns = [
-    path('', Index.as_view(), name='index'),
+    path('sprint/<str:sprintId>/', CasaiWebSprintReport.as_view()),
 ]
