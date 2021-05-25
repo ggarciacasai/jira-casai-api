@@ -1,3 +1,4 @@
+from collections import namedtuple
 from django.db import models
 from collections.abc import Sequence
 from typing import TypeVar
@@ -6,7 +7,7 @@ TModel = TypeVar('TModel')
 Any = TypeVar('Any')
 
 
-def mapListToModelList(arrEl: Sequence[Any], Model: TModel) -> Sequence[TModel]:
+def mapListToModelList(arrEl: Sequence[Any], Model: TModel) -> list[TModel]:
     response = list(map(lambda el: Model(el), arrEl))
     return response
 
@@ -14,10 +15,8 @@ def mapListToModelList(arrEl: Sequence[Any], Model: TModel) -> Sequence[TModel]:
 # Create your models here.
 class Sprint(object):
     def __init__(self, args: dict[str, Any] = {}) -> None:
-        self.startAt = args['startAt']
-        self.maxResults = args['maxResults']
         self.total = args['total']
-        self.issues = mapListToModelList(args['issues'], Issue)
+        self.issues: list[Issue] = mapListToModelList(args['issues'], Issue)
         # self.issues = list(map(lambda el: mapTo(el, Issue), kwargs['issues']))
 
 
@@ -53,3 +52,10 @@ class SprintType(object):
     def __init__(self, args: dict[str, Any] = {}) -> None:
         self.name = args['name']
         self.id = args['id']
+
+class SprintAssigne(object):
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.issues: list(Issue) = []
+        self.burnedPoints = 0
+        self.pendingPoints = 0

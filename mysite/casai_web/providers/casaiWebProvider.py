@@ -1,31 +1,49 @@
-from casai_web.models import Sprint
 import json
+from json.encoder import JSONEncoder
+from casai_web.models import Sprint, SprintAssigne
+from casai_web.providers.abstracts.issuesProvider import IssuesProvider
 
 
-class CasaiWebProvider:
-    def __init__(self, httpClient):
-        self.httpClient = httpClient
 
-    def sprintReview(self, sprintId=''):
-        startAt = 0
-        issues = []
-        while True:
-            sprintDoneIssues = self.httpClient.get('/search?&expand=projects.issuetypes.fields&startAt=' + str(startAt), {
-                'jql': 'project = CW AND issuetype in (standardIssueTypes(), subTaskIssueTypes()) AND status in (Done, Released) AND Sprint = ' + sprintId,
-                'fields': 'summary,description,assignee,labels,priority,issuetype,status,sprint,customfield_10036,timeestimate,timeoriginalestimate,timespent,labels,customfield_10020'
-            })
-            # sprintPendingIssues = self.httpClient.get('/search?&expand=projects.issuetypes.fields?limit=999', {
-            #     'jql': 'project = CW AND issuetype in (standardIssueTypes(), subTaskIssueTypes()) AND status in (Blocked, "Code Review", "Design Review", "In Progress", QA, "To Do", Verification) AND Sprint = ' + sprintId,
-            #     'fields': 'summary,description,assignee,labels,priority,issuetype,status,sprint,customfield_10036,timeestimate,timeoriginalestimate,timespent,labels,customfield_10020'
-            # })
-            response = json.loads(sprintDoneIssues)
-            issues = issues + response['issues']
-            startAt = startAt + len(response['issues'])
+class CasaiWebSprintService:
+    def __init__(self, issuesProvider: IssuesProvider):
+        self.issuesProvider = issuesProvider
 
-            if(startAt >= response['total']):
-                break
-        # y = json.loads(sprintPendingIssues)
-        # sprintDone = Sprint(x)
-        # sprintPending = Sprint(y)
 
-        return issues
+    def sprintReview(self, sprintId: str = ''):
+        sprintPendingIssues = self.issuesProvider.getPendingIssues(sprintId)
+        sprintDoneIssues = self.issuesProvider.getDoneIssues(sprintId)
+
+        asignne: dict[str, SprintAssigne] = {}
+        unassinged = 'Unassigned Issues'
+        asignne[unassinged] = []
+
+        asignne = self.__assingissuesToAssigne(
+            sprintPendingIssues, asignne, unassinged, False)
+        asignne = self.__assingissuesToAssigne(
+            sprintDoneIssues, asignne, unassinged, True)
+        
+
+        return asignne
+
+    def __assingissuesToAssigne(self, sprint: Sprint, assignes: dict[str, list], unassinged: str, idBurned: bool) -> dict[str, list]:
+        for issue in sprint.issues:
+            if (issue.fields.assignee):
+                if assignes.get(issue.fields.assignee.displayName):
+                    assignes[issue.fields.assignee.displayName].issues.append(
+                        issue)
+                    if(issue.fields.points):
+                        assignes[issue.fields.assignee.displayName].burnedPoints = issue.fields.points + \
+                            assignes[issue.fields.assignee.displayName].burnedPoints if idBurned  else issue.fields.points + assignes[issue.fields.assignee.displayName].pendingPoints
+                else:
+                    assignes[issue.fields.assignee.displayName] = SprintAssigne(
+                        issue.fields.assignee.displayName)
+                    assignes[issue.fields.assignee.displayName].issues.append(
+                        issue)
+                    if(issue.fields.points):
+                        assignes[issue.fields.assignee.displayName].burnedPoints = issue.fields.points + \
+                            assignes[issue.fields.assignee.displayName].burnedPoints if idBurned  else issue.fields.points + assignes[issue.fields.assignee.displayName].pendingPoints
+            else:
+                assignes[unassinged].append(issue)
+
+        return assignes
