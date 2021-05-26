@@ -4,7 +4,7 @@
 {
 	"name": "Python 3 & PostgreSQL",
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
+	"service": "django",
 	"workspaceFolder": "/workspace",
 
 	// Set *default* container specific settings.json values on container create.
@@ -20,7 +20,7 @@
 			"username": "postgres",
 			"password": "postgres"
 		}],
-		"python.pythonPath": "/usr/local/bin/python",
+		"python.pythonPath": "/usr/bin/python3",
 		"python.languageServer": "Pylance",
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": true,

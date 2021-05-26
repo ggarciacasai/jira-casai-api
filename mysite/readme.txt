@@ -67,3 +67,11 @@
 # name: "Casai Web"
 # self: "https://casai-tech.atlassian.net/rest/agile/1.0/board/11"
 # type: "scrum"
+
+
+https://blog.logrocket.com/zappa-and-aws-lambda-for-serverless-django/
+
+https://community.atlassian.com/t5/Jira-questions/How-to-access-Sprint-details-using-Api/qaq-p/512783
+https://community.atlassian.com/t5/Answers-Developer-Questions/greenhopper-rest-api-listing-all-issues-in-a-sprint/qaq-p/560678
+https://developer.atlassian.com/cloud/jira/software/rest/intro/
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/

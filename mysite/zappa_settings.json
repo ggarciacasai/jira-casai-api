@@ -1,0 +1,15 @@
+{
+    "dev": {
+        "django_settings": "mysite.settings",
+        "profile_name": "default",
+        "project_name": "workspace",
+        "runtime": "python3.7",
+        "s3_bucket": "zappa-jira",
+        "aws_region": "us-east-1",
+        "cors": true,
+        "environment_variables": {
+            "DOMAIN": "https://casai-tech.atlassian.net/rest",
+            "TOKEN": "Z2lvdmFubmkuZ2FyY2lhQGNhc2FpLmNvbTpCMXhsOVd0WktZMDZROTdpZnR2TEJGRUE=",
+        }
+    }
+}

@@ -8,6 +8,9 @@ def __getClient():
     return httpClient
 
 
+def index(request):
+    return HttpResponse('done')
+
 def getSprintReport(request, sprintId: str):
     response = __getClient().get(
         '/greenhopper/1.0/rapid/charts/sprintreport?rapidViewId=11&sprintId=' + sprintId)

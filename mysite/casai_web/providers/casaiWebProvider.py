@@ -26,7 +26,7 @@ class CasaiWebSprintService:
 
         return asignne
 
-    def __assingissuesToAssigne(self, sprint: Sprint, assignes: dict[str, list], unassinged: str, idBurned: bool) -> dict[str, list]:
+    def __assingissuesToAssigne(self, sprint: Sprint, assignes: 'dict[str, list]', unassinged: str, idBurned: bool) -> 'dict[str, list]':
         for issue in sprint.issues:
             if (issue.fields.assignee):
                 if assignes.get(issue.fields.assignee.displayName):

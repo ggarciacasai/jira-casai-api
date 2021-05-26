@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-n+m-jz$ix@l@*bu0q48(kyxbz_25*p4pmm22a7_hnos6ze*#j5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'bcbq0r1wv1.execute-api.us-east-1.amazonaws.com']
 
 
 # Application definition
@@ -132,7 +132,11 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # API SERVICE ENV VARS
+# APISERVICE = {
+#     'domain': env('DOMAIN'),
+#     'token': env('TOKEN'),
+# }
 APISERVICE = {
-    'domain': env('DOMAIN'),
-    'token': env('TOKEN'),
+    'domain': 'https://casai-tech.atlassian.net/rest',
+    'token': 'Z2lvdmFubmkuZ2FyY2lhQGNhc2FpLmNvbTpCMXhsOVd0WktZMDZROTdpZnR2TEJGRUE=',
 }
