@@ -1,4 +1,4 @@
-
+### todo: update readme
     # response = getClient().get('/field/search?startAt=50')
     # response = getClient().get('/agile/1.0/board')
     # response = getClient().get('/agile/1.0/board/11/sprint')
@@ -75,3 +75,8 @@ https://community.atlassian.com/t5/Jira-questions/How-to-access-Sprint-details-u
 https://community.atlassian.com/t5/Answers-Developer-Questions/greenhopper-rest-api-listing-all-issues-in-a-sprint/qaq-p/560678
 https://developer.atlassian.com/cloud/jira/software/rest/intro/
 https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/
+
+
+https://blog.logrocket.com/zappa-and-aws-lambda-for-serverless-django/
+https://github.com/zappa/Zappa#initial-deployments
+https://medium.com/@apcelent/how-to-deploy-django-app-on-aws-lambda-53e9c4b137e7
