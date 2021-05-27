@@ -4,46 +4,54 @@ from casai_web.models import Sprint, SprintAssigne
 from casai_web.providers.abstracts.issuesProvider import IssuesProvider
 
 
-
 class CasaiWebSprintService:
     def __init__(self, issuesProvider: IssuesProvider):
         self.issuesProvider = issuesProvider
-
 
     def sprintReview(self, sprintId: str = ''):
         sprintPendingIssues = self.issuesProvider.getPendingIssues(sprintId)
         sprintDoneIssues = self.issuesProvider.getDoneIssues(sprintId)
 
-        asignne: dict[str, SprintAssigne] = {}
+        asignnee: 'dict[str, SprintAssigne]' = {}
+
+        asignnee = self.__assingissuesToAssigne(
+            sprintPendingIssues, asignnee,  False)
+        asignnee = self.__assingissuesToAssigne(
+            sprintDoneIssues, asignnee,  True)
+
+        response = {
+            'assignee': []
+        }
+
+        for asigneeKey in asignnee.keys():
+            response['assignee'].append(asignnee[asigneeKey])
+
+        return response
+
+    def __assingissuesToAssigne(self, sprint: Sprint, asignnees: 'dict[str, list]', idBurned: bool) -> 'dict[str, list]':
         unassinged = 'Unassigned Issues'
-        asignne[unassinged] = []
-
-        asignne = self.__assingissuesToAssigne(
-            sprintPendingIssues, asignne, unassinged, False)
-        asignne = self.__assingissuesToAssigne(
-            sprintDoneIssues, asignne, unassinged, True)
-        
-
-        return asignne
-
-    def __assingissuesToAssigne(self, sprint: Sprint, assignes: 'dict[str, list]', unassinged: str, idBurned: bool) -> 'dict[str, list]':
         for issue in sprint.issues:
             if (issue.fields.assignee):
-                if assignes.get(issue.fields.assignee.displayName):
-                    assignes[issue.fields.assignee.displayName].issues.append(
-                        issue)
-                    if(issue.fields.points):
-                        assignes[issue.fields.assignee.displayName].burnedPoints = issue.fields.points + \
-                            assignes[issue.fields.assignee.displayName].burnedPoints if idBurned  else issue.fields.points + assignes[issue.fields.assignee.displayName].pendingPoints
-                else:
-                    assignes[issue.fields.assignee.displayName] = SprintAssigne(
+                if asignnees.get(issue.fields.assignee.displayName) == None:
+                    asignnees[issue.fields.assignee.displayName] = SprintAssigne(
                         issue.fields.assignee.displayName)
-                    assignes[issue.fields.assignee.displayName].issues.append(
-                        issue)
-                    if(issue.fields.points):
-                        assignes[issue.fields.assignee.displayName].burnedPoints = issue.fields.points + \
-                            assignes[issue.fields.assignee.displayName].burnedPoints if idBurned  else issue.fields.points + assignes[issue.fields.assignee.displayName].pendingPoints
-            else:
-                assignes[unassinged].append(issue)
 
-        return assignes
+                asignnees[issue.fields.assignee.displayName].issues.append(
+                    issue)
+
+                if(issue.fields.points):
+                    asignnees[issue.fields.assignee.displayName].burnedPoints = issue.fields.points + \
+                        asignnees[issue.fields.assignee.displayName].burnedPoints if idBurned else issue.fields.points + \
+                        asignnees[issue.fields.assignee.displayName].pendingPoints
+
+            else:
+                if asignnees.get(unassinged) == None:
+                    asignnees[unassinged] = SprintAssigne(unassinged)
+
+                asignnees[unassinged].issues.append(issue)
+                if(issue.fields.points):
+                    asignnees[unassinged].burnedPoints = issue.fields.points + \
+                        asignnees[unassinged].burnedPoints if idBurned else issue.fields.points + \
+                        asignnees[unassinged].pendingPoints
+
+        return asignnees

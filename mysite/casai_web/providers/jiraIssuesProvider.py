@@ -12,9 +12,17 @@ class JiraIssuesProvider(IssuesProvider):
         startAt = 0
         items = []
         while True:
+
             rawResponse = self.httpClient.get(
                 endpoint + '&startAt=' + str(startAt), query)
             response = json.loads(rawResponse)
+            
+            if 'errorMessages' in response:
+                serializedResponse = Sprint(args={
+                    'total': 0,
+                    'issues': []
+                })
+                break
             items = items + response[itemsField]
             startAt = startAt + len(response[itemsField])
 
