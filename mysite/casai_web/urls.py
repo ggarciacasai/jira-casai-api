@@ -6,6 +6,6 @@ urlpatterns = [
     path('', casaiWebSprint.index),
     path('board/', casaiWebSprint.getBoards),
     path('board/<str:projectId>/sprint', casaiWebSprint.getSprints),
-    path('sprint/<str:sprintId>/chart', casaiWebSprint.getSprintReport),
+    path('board/<str:projectId>/sprint/<str:sprintId>/chart', casaiWebSprint.getSprintReport),
     path('sprint/<str:sprintId>/report', CasaiWebSprintReport.as_view()),
 ]

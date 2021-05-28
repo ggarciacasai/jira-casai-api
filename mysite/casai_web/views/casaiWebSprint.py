@@ -11,9 +11,9 @@ def __getClient():
 def index(request):
     return HttpResponse('done')
 
-def getSprintReport(request, sprintId: str):
+def getSprintReport(request, projectId: str, sprintId: str):
     response = __getClient().get(
-        '/greenhopper/1.0/rapid/charts/sprintreport?rapidViewId=11&sprintId=' + sprintId)
+        '/greenhopper/1.0/rapid/charts/sprintreport?rapidViewId=' + projectId + '&sprintId=' + sprintId)
     return HttpResponse(response)
 
 
